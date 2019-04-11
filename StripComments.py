@@ -33,29 +33,29 @@ InputFile = args.InputFile
 
 #Output file checks
 if args.OutputFile is None:
-    OutputFile = str(InputFile) + ".StripComments.txt"
+    OutputFile = str(InputFile) + ".strip"
     print ("Setting Ouput file as "+ OutputFile)
 else:
     OutputFile = args.OutputFile
 
     
-with open(OutputFile, 'w', encoding="utf-8") as f2:
+with open(OutputFile, 'w') as f2:
     with open(InputFile, 'r', encoding='utf-8') as f1:
         for line in f1:
-            line = line.split('#')
-            stripped_string = line[0].rstrip()
             # Write the line only if the comment was after the code.
+            #line = line.split('#')
+            #stripped_string = line[0].rstrip()
             # Discard lines that only contain comments.
-            if stripped_string:
-               line = stripped_string     
+            #if stripped_string:
+            #    line = stripped_string     
             # Keep the Shebang line
             if line[0] == 0x2d0a0d:
                 continue
-            if len(line) < 5:   
-                continue
-            if line[0:] == 0x0c20:
+            if line[0] == chr(12):
                 continue
             if line[0] == "*":
+                continue
+            if len(line) < 5:      
                 continue
             if 'GLOBAL RELATIONSHIP BANKING CITIBANK N.A. - TAIWAN' in line:
                 continue
@@ -95,5 +95,6 @@ with open(OutputFile, 'w', encoding="utf-8") as f2:
                 continue
             # But remove comments from other lines
             else:
-                    f2.writelines(stripped_string)
-                    f2.writelines('\n')
+                line = line.encode('utf8', 'strict').decode('utf8')
+                f2.writelines(str(line))
+ 
